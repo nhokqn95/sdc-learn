@@ -5,61 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SDC Learn - Training</title>
     <style>
-        /* --- CSS GIỮ NGUYÊN & THÊM MỚI --- */
+        /* CSS GIAO DIỆN (Đã tối ưu cho Mobile & Desktop) */
         body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; height: 100%; background-color: #f0f2f5; }
-        
-        /* Màn hình chung */
-        .screen { display: none; height: 100%; padding: 20px; box-sizing: border-box; }
-        .active { display: flex !important; flex-direction: column; align-items: center; }
+        .screen { display: none; min-height: 100%; padding: 20px; box-sizing: border-box; flex-direction: column; align-items: center; }
+        .active { display: flex !important; }
 
-        /* HOME SCREEN */
+        /* MÀN HÌNH CHỜ */
         #home-screen { background-color: #000080; color: white; justify-content: center; }
         h1.logo { font-size: 3.5rem; margin-bottom: 30px; font-weight: bold; text-align: center; }
         .input-group { display: flex; flex-direction: column; gap: 15px; width: 300px; max-width: 90%; }
-        input[type="text"], input[type="password"] { padding: 15px; font-size: 1.1rem; border-radius: 8px; border: none; outline: none; }
+        input { padding: 15px; font-size: 1.1rem; border-radius: 8px; border: none; outline: none; }
         button { padding: 15px; font-size: 1.1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .btn-start { background-color: #ff9800; color: white; }
-        .btn-start:hover { background-color: #e68900; }
         
-        .admin-link { margin-top: 20px; color: #accaff; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
-
-        /* TEST SCREEN */
-        #test-screen { max-width: 800px; margin: 0 auto; display: none; padding-bottom: 80px; }
-        .question-card { background: white; border-radius: 10px; margin-bottom: 20px; padding: 15px; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        /* MÀN HÌNH TEST */
+        #test-screen { max-width: 800px; margin: 0 auto; padding-bottom: 100px; width: 100%; }
+        .question-card { background: white; border-radius: 10px; margin-bottom: 20px; padding: 15px; width: 100%; box-sizing: border-box; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .q-text { font-weight: bold; font-size: 1.1rem; color: #333; }
-        .btn-ng { background-color: #dc3545; color: white; padding: 5px 15px; border-radius: 5px; font-size: 0.9rem; }
-        .q-image-container img { max-width: 100%; max-height: 300px; display: block; margin: 0 auto; border-radius: 5px; }
+        .btn-ng { background-color: #dc3545; color: white; padding: 8px 15px; border-radius: 5px; }
+        .q-image-container img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 5px; }
         .confirmed-text { color: green; font-weight: bold; text-align: center; padding: 20px; font-size: 1.2rem; }
         
-        .footer-action { position: fixed; bottom: 20px; left: 20px; z-index: 100; }
-        .btn-ok { background-color: #28a745; color: white; padding: 12px 30px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .footer-action { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; justify-content: center; }
+        .btn-ok { background-color: #28a745; color: white; padding: 12px 50px; border-radius: 50px; width: 90%; max-width: 300px; }
 
-        /* RESULT SCREEN */
+        /* MÀN HÌNH KẾT QUẢ */
         #result-screen { justify-content: center; }
         .result-box { background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
         .score-display { font-size: 4rem; color: #000080; font-weight: bold; margin: 10px 0; }
-        .btn-continue { background-color: #000080; color: white; width: 100%; margin-top: 20px; }
-
-        /* ADMIN SCREEN */
-        #admin-screen { background-color: #fff; color: #333; display: none; }
-        .admin-header { width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .admin-table { width: 100%; max-width: 800px; border-collapse: collapse; margin-top: 10px; }
-        .admin-table th, .admin-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        .admin-table th { background-color: #000080; color: white; }
-        .btn-back { background-color: #6c757d; color: white; padding: 8px 15px; font-size: 0.9rem; }
+        .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #000080; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* MODAL */
         #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-box { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 500px; }
-        .answer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .answer-option { padding: 12px; background: #e9ecef; text-align: center; cursor: pointer; border-radius: 5px; font-size: 0.9rem; user-select: none; }
-        .answer-option.selected { background: #cce5ff; border: 2px solid #007bff; color: #004085; padding: 10px; } /* Trừ border */
+        .modal-box { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+        .answer-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .answer-option { padding: 15px; background: #e9ecef; text-align: center; cursor: pointer; border-radius: 5px; user-select: none; }
+        .answer-option.selected { background: #cce5ff; border: 2px solid #007bff; color: #004085; padding: 13px; }
         
-        /* ADMIN LOGIN MODAL */
-        #admin-login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; justify-content: center; align-items: center; }
-        .login-box { background: white; padding: 30px; border-radius: 8px; text-align: center; width: 300px; }
-        .btn-login { background-color: #000080; color: white; width: 100%; margin-top: 10px; }
+        /* Responsive chỉnh sửa nhỏ */
+        @media (min-width: 600px) { .answer-grid { grid-template-columns: repeat(3, 1fr); } }
     </style>
 </head>
 <body>
@@ -70,47 +56,32 @@
             <input type="text" id="employee-code" placeholder="Nhập mã nhân viên..." required>
             <button class="btn-start" onclick="startTest()">START</button>
         </div>
-        <div class="admin-link" onclick="showAdminLogin()">Admin Dashboard</div>
+        <p style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7;">V1.2 - Connected to Cloud</p>
     </div>
 
     <div id="test-screen" class="screen">
         <div id="questions-container"></div>
         <div class="footer-action">
-            <button class="btn-ok" onclick="finishTest()">OK (Hoàn thành)</button>
+            <button class="btn-ok" id="btn-submit" onclick="finishTest()">OK (Hoàn thành)</button>
         </div>
     </div>
 
     <div id="result-screen" class="screen">
         <div class="result-box">
-            <h2>Kết Quả</h2>
-            <p>Nhân viên: <span id="res-employee" style="font-weight:bold"></span></p>
-            <div class="score-display">
-                <span id="res-score">0</span><span style="font-size: 2rem; color: #666">/10</span>
+            <div id="loading-ui" style="display:none;">
+                <div class="loading-spinner"></div>
+                <p>Đang lưu kết quả...</p>
             </div>
-            <p>Thời gian: <span id="res-time">00:00</span></p>
-            <button class="btn-continue" onclick="goHome()">Continue</button>
-        </div>
-    </div>
-
-    <div id="admin-screen" class="screen">
-        <div class="admin-header">
-            <h2>Quản trị viên (Admin)</h2>
-            <button class="btn-back" onclick="goHome()">Đăng xuất</button>
-        </div>
-        <p>Lịch sử kiểm tra (Lưu tại máy này):</p>
-        <div style="overflow-x: auto;">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Thời gian</th>
-                        <th>Mã NV</th>
-                        <th>Điểm</th>
-                        <th>Chi tiết</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-table-body">
-                    </tbody>
-            </table>
+            
+            <div id="result-ui" style="display:none;">
+                <h2>Kết Quả</h2>
+                <p>Nhân viên: <span id="res-employee" style="font-weight:bold"></span></p>
+                <div class="score-display">
+                    <span id="res-score">0</span><span style="font-size: 2rem; color: #666">/10</span>
+                </div>
+                <p>Thời gian: <span id="res-time">00:00</span></p>
+                <button class="btn-start" style="background-color: #000080; width: 100%; margin-top: 20px;" onclick="goHome()">Tiếp tục</button>
+            </div>
         </div>
     </div>
 
@@ -119,24 +90,19 @@
             <h3 style="margin-top:0">Chọn lỗi:</h3>
             <div class="answer-grid" id="answer-grid"></div>
             <div style="text-align: right; margin-top: 20px;">
-                <button style="background:#007bff; color:white; padding: 10px 20px;" onclick="confirmAnswer()">Xác nhận</button>
+                <button style="background:#007bff; color:white; padding: 10px 30px; border-radius: 5px; border:none; font-size: 1rem;" onclick="confirmAnswer()">Xác nhận</button>
+                <button style="background:#6c757d; color:white; padding: 10px 20px; border-radius: 5px; border:none; margin-left: 10px;" onclick="closeModal()">Đóng</button>
             </div>
         </div>
     </div>
 
-    <div id="admin-login-modal">
-        <div class="login-box">
-            <h3>Đăng nhập Admin</h3>
-            <input type="password" id="admin-pass-input" placeholder="Mật khẩu..." style="width: 80%; margin-bottom: 10px;">
-            <button class="btn-login" onclick="checkAdminPass()">Đăng nhập</button>
-            <div style="margin-top: 10px; font-size: 0.8rem; cursor: pointer; color: #666;" onclick="closeAdminLogin()">Huỷ bỏ</div>
-        </div>
-    </div>
-
     <script>
-        /* --- CẤU HÌNH --- */
-        const ADMIN_PASSWORD = "admin"; // <--- Đổi mật khẩu admin tại đây
-        
+        // ==========================================
+        // CẤU HÌNH LIÊN KẾT GOOGLE SHEET
+        // ==========================================
+        const GOOGLE_SCRIPT_URL = "DÁN_LINK_CỦA_BẠN_VÀO_ĐÂY"; 
+        // Ví dụ: "https://script.google.com/macros/s/AKfycbx.../exec"
+
         const FIXED_ANSWERS = [
             "Lỗi ngoại quan", "Sai kích thước", "Thiếu linh kiện", 
             "Lắp ngược", "Bẩn/Xước", "Dị vật", 
@@ -144,27 +110,26 @@
             "Biến dạng", "Tem nhãn sai", "Khác"
         ];
 
-        // Thêm hình ảnh thật của bạn vào đây
+        // Dữ liệu câu hỏi (Bạn thay link ảnh thật vào đây)
         const QUESTION_BANK = [
-            { id: 1, text: "Lỗi gì trong hình này?", image: "https://via.placeholder.com/400x200?text=Question+1", correct: "Lỗi ngoại quan" },
-            { id: 2, text: "Xác định lỗi sản phẩm?", image: "https://via.placeholder.com/400x200?text=Question+2", correct: "Sai kích thước" },
-            { id: 3, text: "Vị trí này bị gì?", image: "https://via.placeholder.com/400x200?text=Question+3", correct: "Thiếu linh kiện" },
-            { id: 4, text: "Kiểm tra lỗi?", image: "https://via.placeholder.com/400x200?text=Question+4", correct: "Lắp ngược" },
-            { id: 5, text: "Bề mặt bị sao?", image: "https://via.placeholder.com/400x200?text=Question+5", correct: "Bẩn/Xước" },
-            { id: 6, text: "Tìm lỗi?", image: "https://via.placeholder.com/400x200?text=Question+6", correct: "Dị vật" },
-            { id: 7, text: "Mối nối thế nào?", image: "https://via.placeholder.com/400x200?text=Question+7", correct: "Lỗi hàn" },
-            { id: 8, text: "Cấu trúc bị gì?", image: "https://via.placeholder.com/400x200?text=Question+8", correct: "Nứt/Gãy" },
-            { id: 9, text: "Màu sắc sản phẩm?", image: "https://via.placeholder.com/400x200?text=Question+9", correct: "Sai màu" },
-            { id: 10, text: "Hình dạng sản phẩm?", image: "https://via.placeholder.com/400x200?text=Question+10", correct: "Biến dạng" },
-            { id: 11, text: "Kiểm tra tem?", image: "https://via.placeholder.com/400x200?text=Question+11", correct: "Tem nhãn sai" },
-            { id: 12, text: "Lỗi không xác định?", image: "https://via.placeholder.com/400x200?text=Question+12", correct: "Khác" }
+            { id: 1, text: "Lỗi gì trong hình này?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+1", correct: "Lỗi ngoại quan" },
+            { id: 2, text: "Xác định lỗi sản phẩm?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+2", correct: "Sai kích thước" },
+            { id: 3, text: "Vị trí này bị gì?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+3", correct: "Thiếu linh kiện" },
+            { id: 4, text: "Kiểm tra lỗi?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+4", correct: "Lắp ngược" },
+            { id: 5, text: "Bề mặt bị sao?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+5", correct: "Bẩn/Xước" },
+            { id: 6, text: "Tìm lỗi?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+6", correct: "Dị vật" },
+            { id: 7, text: "Mối nối thế nào?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+7", correct: "Lỗi hàn" },
+            { id: 8, text: "Cấu trúc bị gì?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+8", correct: "Nứt/Gãy" },
+            { id: 9, text: "Màu sắc sản phẩm?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+9", correct: "Sai màu" },
+            { id: 10, text: "Hình dạng sản phẩm?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+10", correct: "Biến dạng" },
+            { id: 11, text: "Kiểm tra tem?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+11", correct: "Tem nhãn sai" },
+            { id: 12, text: "Lỗi không xác định?", image: "https://via.placeholder.com/400x200/eee?text=Hinh+Anh+12", correct: "Khác" }
         ];
 
-        /* --- LOGIC --- */
         let currentQuestions = [], userAnswers = {}, currentEmpCode = "", startTime = null;
         let activeQuestionId = null, selectedOption = null;
 
-        // Init
+        // Khởi tạo Modal
         (function init(){
             const grid = document.getElementById('answer-grid');
             FIXED_ANSWERS.forEach(ans => {
@@ -180,13 +145,11 @@
             });
         })();
 
-        // Navigation
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
-        // --- USER FLOW ---
         function startTest() {
             const code = document.getElementById('employee-code').value.trim();
             if(!code) return alert("Vui lòng nhập mã nhân viên!");
@@ -210,7 +173,6 @@
                 `;
                 container.appendChild(div);
             });
-
             showScreen('test-screen');
         }
 
@@ -221,91 +183,92 @@
             document.getElementById('modal-overlay').style.display = 'flex';
         }
 
-        function confirmAnswer() {
-            if (!selectedOption) return alert("Chọn 1 đáp án!");
-            userAnswers[activeQuestionId] = selectedOption;
-            document.getElementById(`card-${activeQuestionId}`).innerHTML = `<div class="confirmed-text">ĐÃ XÁC NHẬN</div>`;
+        function closeModal() {
             document.getElementById('modal-overlay').style.display = 'none';
         }
 
+        function confirmAnswer() {
+            if (!selectedOption) return alert("Vui lòng chọn 1 đáp án!");
+            userAnswers[activeQuestionId] = selectedOption;
+            document.getElementById(`card-${activeQuestionId}`).innerHTML = `<div class="confirmed-text">ĐÃ XÁC NHẬN</div>`;
+            closeModal();
+        }
+
         function finishTest() {
-            if(Object.keys(userAnswers).length < 10) {
-                if(!confirm(`Mới làm ${Object.keys(userAnswers).length}/10 câu. Nộp luôn?`)) return;
+            // Xác nhận nộp bài
+            const answered = Object.keys(userAnswers).length;
+            if(answered < 10) {
+                if(!confirm(`Bạn mới trả lời ${answered}/10 câu. Bạn có chắc chắn muốn nộp bài?`)) return;
             }
-            
+
+            // Tính điểm
             let score = 0;
-            currentQuestions.forEach(q => { if(userAnswers[q.id] === q.correct) score++; });
-            
+            let details = [];
+            currentQuestions.forEach(q => {
+                const uAns = userAnswers[q.id] || "Bỏ qua";
+                const isCorrect = uAns === q.correct;
+                if(isCorrect) score++;
+                details.push(`Câu ${q.id}: ${uAns} (${isCorrect ? 'Đúng' : 'Sai'})`);
+            });
+
             const timeDiff = Math.floor((new Date() - startTime) / 1000);
             const m = Math.floor(timeDiff/60).toString().padStart(2,'0');
             const s = (timeDiff%60).toString().padStart(2,'0');
+            const timeStr = `${m}:${s}`;
 
-            // Save Result
-            saveResultToStorage(currentEmpCode, score, `${m}:${s}`);
+            // Hiển thị màn hình loading
+            showScreen('result-screen');
+            document.getElementById('loading-ui').style.display = 'block';
+            document.getElementById('result-ui').style.display = 'none';
 
-            // Show Result
+            // Gửi dữ liệu về Google Sheets
+            sendDataToSheet(currentEmpCode, score, timeStr, details.join("; "));
+            
+            // Cập nhật giao diện kết quả
             document.getElementById('res-employee').innerText = currentEmpCode;
             document.getElementById('res-score').innerText = score;
-            document.getElementById('res-time').innerText = `${m}:${s}`;
-            showScreen('result-screen');
+            document.getElementById('res-time').innerText = timeStr;
+        }
+
+        function sendDataToSheet(empCode, score, time, details) {
+            // Nếu chưa dán link Google Script thì báo lỗi
+            if(GOOGLE_SCRIPT_URL.includes("DÁN_LINK")) {
+                alert("Lỗi: Bạn chưa cấu hình đường dẫn Google Script!");
+                document.getElementById('loading-ui').style.display = 'none';
+                document.getElementById('result-ui').style.display = 'block';
+                return;
+            }
+
+            const data = {
+                empCode: empCode,
+                score: score,
+                time: time,
+                details: details
+            };
+
+            // Sử dụng fetch với mode no-cors để gửi data sang Google Script
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(() => {
+                // Giả định thành công (vì no-cors không trả về response đọc được)
+                document.getElementById('loading-ui').style.display = 'none';
+                document.getElementById('result-ui').style.display = 'block';
+            }).catch(err => {
+                console.error('Error:', err);
+                alert("Có lỗi khi lưu kết quả. Vui lòng chụp màn hình gửi quản lý!");
+                document.getElementById('loading-ui').style.display = 'none';
+                document.getElementById('result-ui').style.display = 'block';
+            });
         }
 
         function goHome() {
             document.getElementById('employee-code').value = "";
-            document.getElementById('admin-login-modal').style.display = 'none';
             showScreen('home-screen');
-        }
-
-        // --- ADMIN FLOW ---
-        function showAdminLogin() { document.getElementById('admin-login-modal').style.display = 'flex'; }
-        function closeAdminLogin() { document.getElementById('admin-login-modal').style.display = 'none'; }
-        
-        function checkAdminPass() {
-            const pass = document.getElementById('admin-pass-input').value;
-            if(pass === ADMIN_PASSWORD) {
-                loadAdminData();
-                showScreen('admin-screen');
-                closeAdminLogin();
-                document.getElementById('admin-pass-input').value = "";
-            } else {
-                alert("Sai mật khẩu!");
-            }
-        }
-
-        function loadAdminData() {
-            const history = JSON.parse(localStorage.getItem('sdc_history')) || [];
-            const tbody = document.getElementById('admin-table-body');
-            tbody.innerHTML = "";
-            
-            // Sắp xếp mới nhất lên đầu
-            history.reverse().forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${item.timestamp}</td>
-                    <td><b>${item.empCode}</b></td>
-                    <td>${item.score}/10</td>
-                    <td>${item.time}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-            
-            if(history.length === 0) tbody.innerHTML = "<tr><td colspan='4'>Chưa có dữ liệu</td></tr>";
-        }
-
-        // --- STORAGE ---
-        function saveResultToStorage(empCode, score, timeDuration) {
-            const history = JSON.parse(localStorage.getItem('sdc_history')) || [];
-            const now = new Date();
-            const timeString = `${now.getHours()}:${now.getMinutes()} ${now.getDate()}/${now.getMonth()+1}`;
-            
-            history.push({
-                empCode: empCode,
-                score: score,
-                time: timeDuration,
-                timestamp: timeString
-            });
-            
-            localStorage.setItem('sdc_history', JSON.stringify(history));
         }
     </script>
 </body>
